@@ -22,4 +22,3 @@ else {
 	print("CRITICAL | Content '$search' has not been found\n");
 	exit(2);
 }
-

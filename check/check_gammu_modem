@@ -1,0 +1,32 @@
+#!/usr/bin/perl
+
+use strict;
+use warnings;
+
+if (@ARGV < 1) {
+	print "CRITICAL - Parameter(s) missing (Modemname).\n";
+	
+	exit 2;
+}
+
+my $modem_name = $ARGV[0];
+
+my $out = `sudo /usr/bin/gammu --identify`;
+
+if (not $out or $out !~ m/$modem_name/sg) {
+	print "CRITICAL - modem name \"$modem_name\" not found\n";
+	
+	exit 2;
+}
+
+$out = `sudo /usr/bin/gammu --getsecuritystatus`;
+
+if (not $out or $out !~ m/Nothing to enter/sg) {
+	print "CRITICAL - security status is not acceptable\n";
+	
+	exit 2;
+}
+
+print "OK - gammu modem is looking good and ready to send\n";
+		
+exit 0;

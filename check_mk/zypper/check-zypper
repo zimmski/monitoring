@@ -1,0 +1,28 @@
+#!/usr/bin/python
+
+def inventory_zypper(info):
+	if len(info) > 0:
+		return [ (None, {}) ]
+
+def check_zypper(item, params, info):
+	for line in info:
+		c = ' '.join(line).split(':', 1)
+		
+		if c[0].startswith('Updates'):
+			c[1] = int(c[1])
+
+			status = '%d updates' % (c[1])
+			
+			if c[1] == 0:
+				return (0, 'OK - %s' % (status))
+			else:
+				return (1, 'WARNING - there are updates available - %s' % (status))
+		
+	return (3, "UNKNOWN")
+
+check_info['zypper'] = {
+    "check_function"          : check_zypper,
+    "inventory_function"      : inventory_zypper,
+    "service_description"     : "Zypper Updates",
+    "has_perfdata"            : False,
+}

@@ -1,0 +1,92 @@
+#!/usr/bin/python
+
+def inventory_qnaphardware(info):
+	inventory = []
+
+	for i, line in enumerate(info):
+		item = ' '.join(line).split(':', 1)
+		
+		if item[0].startswith('CPU'):
+			inventory.append(( item[0], { 'temperature': (37, 40) } ))
+		elif item[0].startswith('System'):
+			inventory.append(( item[0], { 'temperature': (37, 40) } ))
+		elif item[0].startswith('Fan'):
+			inventory.append(( item[0], { 'speed': (500, 1500) } ))
+		elif item[0].startswith('HDD'):
+			inventory.append(( item[0], { 'temperature': (37, 40) } ))
+
+	return inventory
+
+def check_qnaphardware(item, params, info):
+	for line in info:
+		c = ' '.join(line).split(':', 1)
+
+		if (item != c[0]):
+			continue
+		
+		attributes = {}
+		for a in c[1].split(';;'):
+			attr = a.split('=', 1)
+			attributes[attr[0].strip()] = attr[1].strip()
+
+		if item.startswith('CPU'):
+			attributes['temperature'] = float(attributes['temperature'])
+			
+			perf = [ ('temperature', attributes['temperature'], params['temperature'][0], params['temperature'][1]) ]
+			status = 'temperature is %f' % (attributes['temperature'])
+			
+			if params['temperature'][1] != None and attributes['temperature'] >= params['temperature'][1]:
+				return (2, 'CRITICAL - temperature above %f - %s' % (params['temperature'][1], status), perf)
+			elif params['temperature'][0] != None and attributes['temperature'] >= params['temperature'][0]:
+				return (1, 'WARNING - temperature above %f - %s' % (params['temperature'][0], status), perf)
+			else:
+				return (0, 'OK - %s' % (status), perf)
+		elif item.startswith('System'):
+			attributes['temperature'] = float(attributes['temperature'])
+			
+			perf = [ ('temperature', attributes['temperature'], params['temperature'][0], params['temperature'][1]) ]
+			status = 'temperature is %f' % (attributes['temperature'])
+			
+			if params['temperature'][1] != None and attributes['temperature'] >= params['temperature'][1]:
+				return (2, 'CRITICAL - temperature above %f - %s' % (params['temperature'][1], status), perf)
+			elif params['temperature'][0] != None and attributes['temperature'] >= params['temperature'][0]:
+				return (1, 'WARNING - temperature above %f - %s' % (params['temperature'][0], status), perf)
+			else:
+				return (0, 'OK - %s' % (status), perf)
+		elif item.startswith('Fan'):
+			attributes['speed'] = float(attributes['speed'])
+			
+			perf = [ ('speed', attributes['speed'], params['speed'][0], params['speed'][1]) ]
+			status = 'speed is %f' % (attributes['speed'])
+			
+			if params['speed'][0] != None and attributes['speed'] <= params['speed'][0]:
+				return (2, 'CRITICAL - speed below %f - %s' % (params['speed'][0], status), perf)
+			elif params['speed'][1] != None and attributes['speed'] >= params['speed'][1]:
+				return (1, 'WARNING - speed above %f - %s' % (params['speed'][1], status), perf)
+			else:
+				return (0, 'OK - %s' % (status), perf)
+		elif item.startswith('HDD'):
+			attributes['temperature'] = float(attributes['temperature'])
+			
+			perf = [ ('temperature', attributes['temperature'], params['temperature'][0], params['temperature'][1]) ]
+			status = '%s - smart is %s, temperature is %f' % (attributes['model'], attributes['smart'], attributes['temperature'])
+			
+			if params['temperature'][1] != None and attributes['temperature'] >= params['temperature'][1]:
+				return (2, 'CRITICAL - temperature above %f - %s' % (params['temperature'][1], status), perf)
+			elif params['temperature'][0] != None and attributes['temperature'] >= params['temperature'][0]:
+				return (1, 'WARNING - temperature above %f - %s' % (params['temperature'][0], status), perf)
+			
+			if attributes['smart'] != 'GOOD':
+				return (2, 'CRITICAL - smart is not GOOD - %s' % (status), perf)
+
+			return (0, 'OK - %s' % (status), perf)
+		break
+		
+	return (3, "UNKNOWN")
+	
+check_info['qnap-hardware'] = {
+    "check_function"          : check_qnaphardware,
+    "inventory_function"      : inventory_qnaphardware,
+    "service_description"     : "QNAP %s",
+    "has_perfdata"            : True,
+}

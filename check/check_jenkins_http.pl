@@ -10,16 +10,16 @@ my $ua = Mojo::UserAgent->new;
 $ua->connect_timeout(45);
 
 $ua = $ua->cookie_jar(Mojo::UserAgent::CookieJar->new);
-$ua->max_redirects(3);
 
-my $tx = $ua->post($ARGV[0] . '/j_acegi_security_check' => form => { j_username => $ARGV[1], j_password => $ARGV[2], Submit => 'login' });
+my $tx = $ua->post($ARGV[0] . '/j_acegi_security_check' => form => { j_username => $ARGV[1], j_password => $ARGV[2] });
 
 if (my $res = $tx->success) {
-	my $body = $res->body;
-	
-	if ($body =~ m/Welcome to Jenkins/ or $body =~ m/Willkommen bei Jenkins/) {
+	if ($tx->res->code == 302 and $tx->res->headers->header('Location') !~ m/error/i) {
 		print("OK | Login into jenkins successfully\n");
 		exit(0);
+	} else {
+		print("WARNING | Wrong login credentials\n");
+		exit(1);
 	}
 }
 

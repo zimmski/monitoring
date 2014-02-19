@@ -15,13 +15,13 @@ my $tx = $ua->post($ARGV[0] . '/j_acegi_security_check' => form => { j_username 
 
 if (my $res = $tx->success) {
 	if ($tx->res->code == 302 and $tx->res->headers->header('Location') !~ m/error/i) {
-		print("OK | Login into jenkins successfully\n");
+		print("OK | Login into Jenkins was successful\n");
 		exit(0);
 	} else {
-		print("WARNING | Wrong login credentials\n");
+		print("WARNING | Login into Jenkins failed, wrong login credentials\n");
 		exit(1);
 	}
 }
 
-print("CRITICAL | Cannot login into jenkins: " . $tx->error . "\n");
+print("CRITICAL | Login into Jenkins failed: " . $tx->error . "\n");
 exit(2);

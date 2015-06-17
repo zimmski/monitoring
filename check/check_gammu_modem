@@ -5,28 +5,48 @@ use warnings;
 
 if (@ARGV < 1) {
 	print "CRITICAL - Parameter(s) missing (Modemname).\n";
-	
+
 	exit 2;
 }
 
 my $modem_name = $ARGV[0];
+my $modem_pin = $ARGV[0];
 
-my $out = `sudo /usr/bin/gammu --identify`;
+for my $try (1..3) {
+	my $out = `/usr/bin/gammu --identify`;
 
-if (not $out or $out !~ m/$modem_name/sg) {
-	print "CRITICAL - modem name \"$modem_name\" not found\n";
-	
-	exit 2;
+	if (not $out or $out !~ m/$modem_name/sg) {
+		if ($try < 3) {
+			`/usr/bin/umts-modem-rebind`;
+
+			my $passed = `sudo -u icinga /usr/bin/gammu --entersecuritycode PIN $modem_pin`;
+
+			if ($passed !~ m/Nothing to enter/) {
+				print $passed;
+			}
+
+			next;
+		}
+
+		print "CRITICAL - modem name \"$modem_name\" not found\n";
+
+		exit 2;
+	} else {
+		last;
+	}
 }
 
-$out = `sudo /usr/bin/gammu --getsecuritystatus`;
+{
+	my $out = `/usr/bin/gammu --getsecuritystatus`;
 
-if (not $out or $out !~ m/Nothing to enter/sg) {
-	print "CRITICAL - security status is not acceptable\n";
-	
-	exit 2;
+	if (not $out or $out !~ m/Nothing to enter/sg) {
+
+		print "CRITICAL - security status is not acceptable:\n$out\n";
+
+		exit 2;
+	}
 }
 
 print "OK - gammu modem is looking good and ready to send\n";
-		
+
 exit 0;

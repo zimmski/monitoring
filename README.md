@@ -10,6 +10,7 @@ The repository is structured in the following way:
 * **/check** every file holds one specific check and can be used on its own
 	- **check_gammu_modem** checks if a gammu modem is available, correctly configured and in general can be used
 	- **check_jenkins_http.pl** checks if a Jenkins instance is correctly running
+	- **check_svn** checks if a SVN repository is readable and writeable
 	- **check_ntlm_content.pl** check a website using NTLM as authentication
 	- **check_sonarqube_http.pl** check if a SonarQube instance is correctly running
 * **/check_mk** every folder holds one check_mk check which consist of one agent and one server script

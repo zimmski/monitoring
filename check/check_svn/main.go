@@ -17,11 +17,20 @@ func critical(msg string, err error) {
 	os.Exit(2)
 }
 
+var opts struct {
+	Repository string `long:"repository" required:"true"`
+	User       string `long:"user" required:"true"`
+	Password   string `long:"password" required:"true"`
+	Verbose    bool   `long:"verbose"`
+}
+
 func runToStd(cmd ...string) (exitStatus int, err error) {
 	c := exec.Command(cmd[0], cmd[1:]...)
 
-	c.Stdout = os.Stdout
-	c.Stderr = os.Stderr
+	if opts.Verbose {
+		c.Stdout = os.Stdout
+		c.Stderr = os.Stderr
+	}
 
 	err = c.Run()
 	if err != nil {
@@ -38,12 +47,6 @@ func runToStd(cmd ...string) (exitStatus int, err error) {
 }
 
 func main() {
-	var opts struct {
-		Repository string `long:"repository" required:"true"`
-		User       string `long:"user" required:"true"`
-		Password   string `long:"password" required:"true"`
-	}
-
 	_, err := flags.Parse(&opts)
 	if err != nil {
 		critical("parsing arguments", err)

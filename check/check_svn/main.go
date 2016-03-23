@@ -18,11 +18,11 @@ func critical(msg string, err error) int {
 }
 
 var opts struct {
-	Repository string `long:"repository" required:"true"`
-	User       string `long:"user" required:"true"`
-	Password   string `long:"password" required:"true"`
-	Message    string `long:"message"`
-	Verbose    bool   `long:"verbose"`
+	Repository string `long:"repository" required:"true" description:"The repository URL which that should be tested."`
+	User       string `long:"user" required:"true" description:"The user to access the repository."`
+	Password   string `long:"password" required:"true" description:"The password for the user."`
+	Message    string `long:"message" description:"The commit message which should be used for the commit to the repository. If not set the current Unix time will be used."`
+	Verbose    bool   `long:"verbose" description:"Activate log messages and forward STDOUT and STDERR of executed commands."`
 }
 
 func runToStd(cmd ...string) (exitStatus int, err error) {

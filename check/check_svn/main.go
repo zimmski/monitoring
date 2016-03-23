@@ -21,6 +21,7 @@ var opts struct {
 	Repository string `long:"repository" required:"true"`
 	User       string `long:"user" required:"true"`
 	Password   string `long:"password" required:"true"`
+	Message    string `long:"message"`
 	Verbose    bool   `long:"verbose"`
 }
 
@@ -73,14 +74,16 @@ func cmd() (exitStatus int) {
 		return critical("change to temporary directory", err)
 	}
 
-	now := fmt.Sprintf("%d", time.Now().Unix())
+	if opts.Message == "" {
+		opts.Message = fmt.Sprintf("%d", time.Now().Unix())
+	}
 
-	err = ioutil.WriteFile(tmp+"/test.txt", []byte(now), 0700)
+	err = ioutil.WriteFile(tmp+"/test.txt", []byte(opts.Message), 0700)
 	if err != nil {
 		return critical("write to test file", err)
 	}
 
-	_, err = runToStd("svn", "commit", "--username", opts.User, "--password", opts.Password, "--message", now)
+	_, err = runToStd("svn", "commit", "--username", opts.User, "--password", opts.Password, "--message", opts.Message)
 	if err != nil {
 		return critical("commit change", err)
 	}

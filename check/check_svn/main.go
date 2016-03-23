@@ -26,6 +26,10 @@ var opts struct {
 }
 
 func runToStd(cmd ...string) (exitStatus int, err error) {
+	if opts.Verbose {
+		fmt.Printf("%v\n", cmd)
+	}
+
 	c := exec.Command(cmd[0], cmd[1:]...)
 
 	if opts.Verbose {

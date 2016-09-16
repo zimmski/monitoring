@@ -21,4 +21,5 @@ The repository is structured in the following way:
 	- **zypper** agent + check_mk check for openSUSE's zypper to check for new updates
 * **/scripts** every folder holds one script for various purposes
 	- **cronjob-mailgw-remove-queued-spam** removes mails that were too long in the mail queue and can be marked as spam
+	- **rebind-usb-umts-modem.pl** rebinds an UMTS modem which is handy if it often hangs
 * **uptime-statistic.daemon.pl** a more detailed `ping` command

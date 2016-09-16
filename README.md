@@ -15,6 +15,7 @@ The repository is structured in the following way:
 	- **check_svn** checks if a SVN repository is readable and writable
 	- **check_ntlm_content.pl** check a website using NTLM as authentication
 	- **check_sonarqube_http.pl** check if a SonarQube instance is correctly running
+	- **check_traceroute.pl** does a traceroute and optionally checks if certain hosts are in the path
 * **/check_mk** every folder holds one check_mk check which consist of one agent and one server script
 	- **linux_services** agent + check_mk check to check if all services (queried via `service --status-all`) are in an OK status
 	- **qnap** agent + check_mk check for qnap hardware

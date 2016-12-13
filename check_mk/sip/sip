@@ -1,0 +1,22 @@
+#!/usr/bin/python
+
+def inventory_sip(info):
+	if len(info) > 0:
+		return [ (None, {}) ]
+
+def check_sip(item, params, info):
+	for line in info:
+		if line[0] == "registrations":
+			if int(line[1]) == 0:
+				return (2, 'CRITICAL - there are no registrations')
+			else:
+				return (0, 'OK - found %s registrations: %s' % (line[1], line[2]))
+
+	return (2, 'CRITICAL - did not find a registrations line')
+
+check_info['sip'] = {
+    "check_function"          : check_sip,
+    "inventory_function"      : inventory_sip,
+    "service_description"     : "SIP",
+    "has_perfdata"            : False,
+}

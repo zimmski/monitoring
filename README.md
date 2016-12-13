@@ -19,6 +19,7 @@ The repository is structured in the following way:
 * **/check_mk** every folder holds one check_mk check which consist of one agent and one server script
 	- **linux_services** agent + check_mk check to check if all services (queried via `service --status-all`) are in an OK status
 	- **qnap** agent + check_mk check for qnap hardware
+	- **sip** agent + check_mk check for asterisk
 	- **zypper** agent + check_mk check for openSUSE's zypper to check for new updates
 * **/scripts** every folder holds one script for various purposes
 	- **cronjob-mailgw-remove-queued-spam** removes mails that were too long in the mail queue and can be marked as spam

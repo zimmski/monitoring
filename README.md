@@ -7,7 +7,7 @@ This is a collection of monitoring checks, tools, ... which I had to write becau
 
 The repository is structured in the following way:
 
-* **/check** every file holds one specific check and can be used on its own
+* **/check** every file holds one check for a specific service
 	- **check_gammu_modem** checks if a gammu modem is available, correctly configured and in general can be used
 	- **check_imap_mailbox_count** checks the message count of an IMAP mailbox
 	- **check_jenkins_http.pl** checks if a Jenkins instance is correctly running
@@ -21,6 +21,8 @@ The repository is structured in the following way:
 	- **qnap** agent + check_mk check for qnap hardware
 	- **sip** agent + check_mk check for asterisk
 	- **zypper** agent + check_mk check for openSUSE's zypper to check for new updates
+* **/services** every folder holds one service for various purposes
+	- **voipnotify** converts a text message to speech and calls given recipients
 * **/scripts** every folder holds one script for various purposes
 	- **cronjob-mailgw-remove-queued-spam** removes mails that were too long in the mail queue and can be marked as spam
 	- **rebind-usb-umts-modem.pl** rebinds an UMTS modem which is handy if it often hangs
